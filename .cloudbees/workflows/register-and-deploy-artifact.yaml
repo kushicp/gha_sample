@@ -23,7 +23,7 @@ jobs:
           echo "Output param: ${{ steps.registerBuildArtifact.outputs.artifact-id }}"
   
   deploy-artifact:
-    needs: registerBuildArtifact
+    needs: buildArtRegTest
     environment: kcp-env
     steps:
       - name: Deploy artifact to environment
