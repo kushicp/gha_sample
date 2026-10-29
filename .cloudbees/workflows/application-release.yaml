@@ -1,0 +1,40 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: Application Release
+on:
+  workflow_dispatch:
+    inputs:
+      manifest:
+        type: string
+jobs:
+  test:
+    steps:
+      - id: echo_manifest
+        name: echo_manifest
+        uses: docker://alpine/curl:latest
+        run: |
+          echo "Manifest is: $MANIFEST"
+        env:
+          MANIFEST: ${{ inputs.manifest }}
+  testArtifacts:
+    steps:
+      - name: Deploy artifact
+        with:
+          version: "26264"
+          url: https://test.url/23271
+          target-environment: kcp-env
+          name: testArtDepl
+        uses: cloudbees-io/register-deployed-artifact@v1
+    needs:
+      - kcp_appr_job
+  kcp_appr_job:
+    timeout-minutes: 4320
+    delegates: cloudbees-io/manual-approval/custom-job.yml@v1
+    with:
+      approvers: 0a808e26-f884-11ec-aa0a-42010a83ae55
+      disallowLaunchByUser: false
+      instructions: check
+      approvalInputs: |
+        kcp_appr_param:
+          type: string
+          default: kcp
