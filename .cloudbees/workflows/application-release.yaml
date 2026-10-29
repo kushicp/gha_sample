@@ -20,10 +20,8 @@ jobs:
     steps:
       - name: Deploy artifact
         with:
-          version: "26264"
-          url: https://test.url/23271
-          target-environment: kcp-env
-          name: testArtDepl
+          artifact-id: ea07033d-3008-40ec-9e50-a0efce7493d8
+          labels: just-deployed
         uses: cloudbees-io/register-deployed-artifact@v2
     needs:
       - kcp_appr_job
