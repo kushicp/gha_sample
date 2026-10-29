@@ -23,11 +23,11 @@ jobs:
           echo "Output param: ${{ steps.registerBuildArtifact.outputs.artifact-id }}"
   
   deploy-artifact:
-    needs: register-artifact
+    needs: registerBuildArtifact
     environment: kcp-env
     steps:
       - name: Deploy artifact to environment
         uses: cloudbees-io/register-deployed-artifact@v2
         with:
-          artifact-id: ${{ needs.register-artifact.outputs.artifact-id }}
+          artifact-id: ${{ needs.registerBuildArtifact.outputs.artifact-id }}
           target-environment: kcp-env
