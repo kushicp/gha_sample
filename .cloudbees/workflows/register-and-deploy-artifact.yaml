@@ -4,30 +4,30 @@ name: register-and-deploy-artifact
 
 on:
   workflow_dispatch:
+
 jobs:
-  buildArtRegTest:
+  register-artifact:
     steps:
-      - id: registerBuildArtifact
-        name: catalog action test
-        with:
-          version: "15.93"
-          url: docker.io/myapp/kcpImg15:15.0
-          digest: d1603
-          labels:  "lbl15"
-          name: kcpBuildTestRegister153
+      - name: Checkout code
+        uses: cloudbees-io/checkout@v1
+      
+      - name: Register build artifact
+        id: register
         uses: cloudbees-io/register-build-artifact@v2
-      - name: Artifact Id output
-        uses: docker://golang:1.20.3-alpine3.17
-        shell: sh
-        run: |
-          echo "Output param: ${{ steps.registerBuildArtifact.outputs.artifact-id }}"
+        with:
+          name: KcpRegisterArtifact
+          version: v123
+          url: https://KcpRegisterArtifact.url/
+    
+    outputs:
+      artifact-id: ${{ steps.register.outputs.artifact-id }}
   
   deploy-artifact:
-    needs: buildArtRegTest
+    needs: register-artifact
     environment: kcp-env
     steps:
       - name: Deploy artifact to environment
         uses: cloudbees-io/register-deployed-artifact@v2
         with:
-          artifact-id: ${{ needs.buildArtRegTest.outputs.artifact-id }}
+          artifact-id: ${{ needs.register-artifact.outputs.artifact-id }}
           target-environment: kcp-env
