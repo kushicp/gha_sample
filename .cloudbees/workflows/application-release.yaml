@@ -24,7 +24,7 @@ jobs:
           url: https://test.url/23271
           target-environment: kcp-env
           name: testArtDepl
-        uses: cloudbees-io/register-deployed-artifact@v1
+        uses: cloudbees-io/register-deployed-artifact@v2
     needs:
       - kcp_appr_job
   kcp_appr_job:
