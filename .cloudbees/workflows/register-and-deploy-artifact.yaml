@@ -1,0 +1,33 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: register-and-deploy-artifact
+
+on:
+  workflow_dispatch:
+
+jobs:
+  register-artifact:
+    steps:
+      - name: Checkout code
+        uses: cloudbees-io/checkout@v1
+      
+      - name: Register build artifact
+        id: register
+        uses: cloudbees-io/register-build-artifact@v2
+        with:
+          name: KcpRegisterArtifact
+          version: v123
+          url: https://KcpRegisterArtifact.url/
+    
+    outputs:
+      artifact-id: ${{ steps.register.outputs.artifact-id }}
+  
+  deploy-artifact:
+    needs: register-artifact
+    environment: kcp-env
+    steps:
+      - name: Deploy artifact to environment
+        uses: cloudbees-io/register-deployed-artifact@v2
+        with:
+          artifact-id: ${{ needs.register-artifact.outputs.artifact-id }}
+          target-environment: kcp-env
