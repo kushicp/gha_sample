@@ -29,5 +29,5 @@ jobs:
       - name: Deploy artifact to environment
         uses: cloudbees-io/register-deployed-artifact@v2
         with:
-          artifact-id: ${{ needs.registerBuildArtifact.outputs.artifact-id }}
+          artifact-id: ${{ needs.buildArtRegTest.outputs.artifact-id }}
           target-environment: kcp-env
